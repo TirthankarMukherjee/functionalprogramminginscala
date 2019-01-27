@@ -84,11 +84,39 @@ object List {
   //3.14
   def append[A](as: List[A], element: A): List[A] = {
     foldRight(as, List(element))((h, t) => Cons(h, t))
-   // foldRight(as, List(element))( Cons(_,_))
+    // foldRight(as, List(element))( Cons(_,_))
+  }
+
+  def append[A](l: List[A], r: List[A]): List[A] =
+    foldRight(l, r)(Cons(_, _))
+
+  // My concatenate looks like this, as I miss understood earlier problem of append, where I was adding a single
+  // element, but in end all looks sa,e ;)
+  //3.15
+  def concatenate[A](as: List[List[A]]): List[A] = {
+    foldRight(as, Nil: List[A])((h, t) =>
+      foldLeft(t, h)((acc, hh) =>
+        append(acc, hh)))
+  }
+
+  //3.15
+  def concatenateBetter[A](as: List[List[A]]): List[A] = {
+    foldRight(as, Nil: List[A])(append)
+  }
+
+
+  //3.16 , 3.17, 3.18
+  def map[A, B](as: List[A])(f: A => B): List[B] = {
+    foldRight(as, Nil: List[B])((h, acc) => Cons(f(h), acc))
+  }
+
+  //3.19
+  def filter[A](as: List[A])(f: A => Boolean): List[A] = {
+    foldRight(as, List[A]())((h, acc) => if (f(h)) Cons(h, acc) else acc)
   }
 
   def apply[A](as: A*): List[A] =
-    if (as.isEmpty) Nil
+    if (as.isEmpty) Nil  
     else Cons(as.head, apply(as.tail: _*))
 
 
@@ -118,6 +146,14 @@ object List {
     println(reverse(List("a", "b", "c")))
 
     println(append(List("a", "b", "c"), "d"))
+    println(concatenate(List(List(1, 2, 3, 4), List(5, 6, 7, 8))))
+    println(concatenateBetter(List(List(1, 2, 3, 4), List(5, 6, 7, 8))))
+
+    println(map(List(1, 2, 3, 4))(_ + 1))
+    //3.17
+    println(map[Double, String](List[Double](1.0, 2.0, 3.0, 4.0))(_.toString))
+
+    println(filter(List(1, 5, 2, 3, 4, 3))(x => x < 4))
   }
 }
 
