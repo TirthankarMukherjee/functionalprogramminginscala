@@ -115,8 +115,20 @@ object List {
     foldRight(as, List[A]())((h, acc) => if (f(h)) Cons(h, acc) else acc)
   }
 
+  //3.20
+  def flatmap[A](as: List[A])(f: A => List[A]): List[A] = {
+    foldRight(as, Nil: List[A])((h, acc) => append(f(h), acc))
+  }
+
+  //3.21
+  def filterWithFlatMap[A](as: List[A])(f: A => Boolean): List[A] = {
+    flatmap(as)(x => if (f(x)) List(x) else Nil)
+  }
+
+
+
   def apply[A](as: A*): List[A] =
-    if (as.isEmpty) Nil  
+    if (as.isEmpty) Nil
     else Cons(as.head, apply(as.tail: _*))
 
 
@@ -154,6 +166,11 @@ object List {
     println(map[Double, String](List[Double](1.0, 2.0, 3.0, 4.0))(_.toString))
 
     println(filter(List(1, 5, 2, 3, 4, 3))(x => x < 4))
+    //3.20
+    println(flatmap(List(1, 2, 3, 4, 5))(x => List(x, x)))
+
+    //3.21
+    println(filterWithFlatMap(List(1, 5, 2, 3, 4, 3))(x => x < 4))
   }
 }
 
