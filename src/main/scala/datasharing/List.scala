@@ -116,19 +116,31 @@ object List {
   }
 
   //3.20
-  def flatmap[A](as: List[A])(f: A => List[A]): List[A] = {
-    foldRight(as, Nil: List[A])((h, acc) => append(f(h), acc))
+  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = {
+    foldRight(as, Nil: List[B])((h, acc) => append(f(h), acc))
   }
 
   //3.21
   def filterWithFlatMap[A](as: List[A])(f: A => Boolean): List[A] = {
-    flatmap(as)(x => if (f(x)) List(x) else Nil)
+    flatMap(as)(h => if (f(h)) List(h) else Nil)
   }
 
+  //3.22
+  //Write a function that accepts two lists and constructs a new list by adding corresponding
+  //elements. For example, List(1,2,3) and List(4,5,6) become List(5,7,9).
+
+  def addCorrespondingDigits(a: List[Int], b: List[Int]): List[Int] = (a, b) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(ah, at), Cons(bh, bt)) => Cons(ah + bh, addCorrespondingDigits(at, bt))
+  }
+
+  //3.24
+  //def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean
 
 
   def apply[A](as: A*): List[A] =
-    if (as.isEmpty) Nil
+    if (as.isEmpty) Nil  
     else Cons(as.head, apply(as.tail: _*))
 
 
@@ -167,10 +179,11 @@ object List {
 
     println(filter(List(1, 5, 2, 3, 4, 3))(x => x < 4))
     //3.20
-    println(flatmap(List(1, 2, 3, 4, 5))(x => List(x, x)))
-
+    println(flatMap(List(1, 2, 3, 4, 5))(x => List(x, x)))
     //3.21
     println(filterWithFlatMap(List(1, 5, 2, 3, 4, 3))(x => x < 4))
+    //3.22
+    println(addCorrespondingDigits(List(1, 2, 3),List(4, 5, 6)))
   }
 }
 
